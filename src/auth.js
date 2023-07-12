@@ -18,7 +18,7 @@ router.post('/login', async (req, res) => {
       }
   
       // Login bem-sucedido
-      res.json({ message: 'Login bem-sucedido' });
+      res.json({ message: 'Login bem-sucedido' , nome: user.nome });
     } catch (error) {
       console.error('Erro ao realizar login:', error);
       res.status(500).json({ error: 'Erro ao realizar login' });
