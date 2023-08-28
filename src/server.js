@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+
 const cors = require('cors');
 const userRoutes = require("./routes");
 const authRoutes = require('./auth');
@@ -9,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 // Conectando-se ao MongoDB
-mongoose.connect('mongodb+srv://cimol:c1i2m3o4l5@cleanmap.eiqipwt.mongodb.net/', {
+mongoose.connect('mongodb+srv://cimol:c1i2m3o4l5@cleanmap.eiqipwt.mongodb.net/test', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -20,15 +21,14 @@ mongoose.connect('mongodb+srv://cimol:c1i2m3o4l5@cleanmap.eiqipwt.mongodb.net/',
     console.error("Erro ao conectar-se ao MongoDB:", error);
   });
 
-
-
 // Rotas do usuário
 app.use("/Usuario", userRoutes);
 
 app.use('/usuario', authRoutes);
 
 // Iniciando o servidor
-const port = 3000;
+const port = 4000;
+
 app.listen(port, () => {
   console.log(`Servidor iniciado na porta ${port}`);
 });
