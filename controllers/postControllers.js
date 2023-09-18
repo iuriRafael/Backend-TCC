@@ -1,27 +1,34 @@
 
 const Post = require('../model/post');
 
-exports.Postagem = async (req, res) => {
+// Função para fazer upload de imagem com descrição e localização
+exports.uploadImage = async (req, res) => {
   try {
-    const { imagem, descricao, localizacao } = req.body;
+    const { description, location, imagePath } = req.body;
 
-    const newPost = await Post.create({ imagem, descricao, localizacao });
+    // Crie uma nova instância do modelo de imagem
+    const post = new Post({ description, location, imagePath });
 
-    res.status(201).json({ message: 'Postagem criada com sucesso', postagem: newPost });
+    // Salve o post no banco de dados
+    await post.save();
+
+    res.json({ message: 'Salvo com sucesso!' });
   } catch (error) {
-    console.error('Erro ao criar postagem:', error);
-    res.status(500).json({ error: 'Erro ao criar a postagem' });
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao fazer upload da imagem.' });
   }
 };
 
-
-exports.listarPostagens = async (req, res) => {
+exports.listImages = async (req, res) => {
   try {
-    const postagens = await Post.find().populate('userId', 'nome'); // Popula o nome do usuário
+    // Selecione os campos que você deseja retornar
+    const images = await Post.find({});
 
-    res.json(postagens);
+    console.log(images); // Adicione esta linha para depurar
+
+    res.json(images);
   } catch (error) {
-    console.error('Erro ao listar postagens:', error);
-    res.status(500).json({ error: 'Erro ao listar postagens' });
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao listar as imagens.' });
   }
 };
