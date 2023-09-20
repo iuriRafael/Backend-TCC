@@ -1,34 +1,51 @@
-
 const Post = require('../model/post');
+const fs = require('fs');
+const path = require('path');
 
 // Função para fazer upload de imagem com descrição e localização
 exports.uploadImage = async (req, res) => {
   try {
-    const { description, location, imagePath } = req.body;
+    const imageInfos = [];
 
-    // Crie uma nova instância do modelo de imagem
-    const post = new Post({ description, location, imagePath });
+    for (const file of req.body.files) {
+      const base64Data = file.replace(/^data:image\/\w+;base64,/, '');
+      const imageBuffer = Buffer.from(base64Data, 'base64');
+      const imagePath = './uploads/' + Date.now() + '.png'; // Caminho para salvar a imagem
+      const { description, location } = req.body;
 
-    // Salve o post no banco de dados
-    await post.save();
+      // Salvar a imagem no servidor
+      fs.writeFileSync(path.resolve(imagePath), imageBuffer);
 
-    res.json({ message: 'Salvo com sucesso!' });
+      // Criar um objeto de informações da imagem
+      const imageInfo = {
+        image: imagePath,
+        description: description,
+        location: location,
+      };
+
+      imageInfos.push(imageInfo);
+    }
+
+    // Salvar as informações das imagens no banco de dados
+    const savedImages = await Post.insertMany(imageInfos);
+
+    console.log('Imagens salvas com sucesso no banco de dados:', savedImages);
+    res.json({ message: 'Imagens salvas com sucesso no banco de dados' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erro ao fazer upload da imagem.' });
+    console.error('Erro ao salvar imagens:', error);
+    res.status(500).json({ message: 'Erro ao salvar imagens' });
   }
 };
 
-exports.listImages = async (req, res) => {
+
+
+exports.listPosts = async (req, res) => {
   try {
-    // Selecione os campos que você deseja retornar
-    const images = await Post.find({});
+    const posts = await Post.find().exec();
 
-    console.log(images); // Adicione esta linha para depurar
-
-    res.json(images);
+    res.json(posts);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erro ao listar as imagens.' });
+    res.status(500).json({ error: 'Erro ao listar as postagens.' });
   }
 };
