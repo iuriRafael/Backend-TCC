@@ -6,7 +6,9 @@ const path = require('path');
 exports.uploadImage = async (req, res) => {
   try {
     const imageInfos = [];
-    const userId = req.session.userId
+    const userId = req.body.userId
+
+    console.log('ID do usuário:', userId);
 
     for (const file of req.body.files) {
       const base64Data = file.replace(/^data:image\/\w+;base64,/, '');
@@ -19,10 +21,10 @@ exports.uploadImage = async (req, res) => {
 
       // Criar um objeto de informações da imagem
       const imageInfo = {
-        user: userId,
         image: imagePath,
         description: description,
         location: location,
+        userId: userId,
       };
 
       imageInfos.push(imageInfo);

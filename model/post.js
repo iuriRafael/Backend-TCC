@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Suponha que o nome do modelo de usuário seja 'User'
+    ref: 'User', 
+    required: true
   },
-  
   description: String,
   location: String,
   image: String,
