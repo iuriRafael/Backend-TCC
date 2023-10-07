@@ -3,7 +3,7 @@ const router = express.Router();
 const imageController = require('../controllers/postControllers');
 const Post = require('../model/post');
 
-  
+
   // Rota para upload de imagem com descrição e localização
   router.post('/upload', imageController.uploadImage);
   // Rota para listar as imagens
@@ -11,6 +11,7 @@ const Post = require('../model/post');
 
   router.get('/user/:userId', async (req, res) => {
     try {
+      
       const userId = req.params.userId;
 
       const userPublications = await Post.find({ userId: userId });
@@ -21,5 +22,12 @@ const Post = require('../model/post');
       res.status(500).json({ error: 'Erro ao buscar as publicações do usuário' });
     }
   });
+
+  router.put('/:id/conclude', imageController.concludePost);
+
+  //fazer a rota para listar as publicações concluídas
+  router.get('/listConcluded', imageController.listConcludedPosts);
+
+
   
 module.exports = router;

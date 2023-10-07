@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const postSchema = new mongoose.Schema({
+const concludedPostSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', 
@@ -10,8 +10,9 @@ const postSchema = new mongoose.Schema({
   description: String,
   location: String,
   image: String,
-});
   
-const Post = mongoose.model('Post', postSchema);
+});
 
-module.exports = Post;
+const ConcludedPost = mongoose.model('ConcludedPost', concludedPostSchema);
+
+module.exports = ConcludedPost;
