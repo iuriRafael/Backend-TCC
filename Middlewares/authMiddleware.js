@@ -4,12 +4,11 @@ const User = require('../model/user');
 const requireAuth = (req, res, next) => {
     const token = req.headers.authorization;
   
-    // Verifique se o token JWT está presente nas informações de autorização
     if (!token) {
       return res.status(401).json({ error: 'Token de autenticação ausente' });
     }
   
-    // Verifique o token JWT
+  
     jwt.verify(token, 'iurikannemann', async (err, decodedToken) => {
       if (err) {
         console.error('Erro ao verificar token JWT:', err);
@@ -17,7 +16,7 @@ const requireAuth = (req, res, next) => {
       }
   
       try {
-        // Verifique se o usuário com o ID do token existe no banco de dados
+  
         const user = await User.findById(decodedToken.userId);
   
         if (!user) {

@@ -11,6 +11,6 @@ mongoose.connect('mongodb+srv://cimol:c1i2m3o4l5@cleanmap.eiqipwt.mongodb.net/te
   console.error('Erro ao conectar ao MongoDB:', err);
 });
 
-module.exports = mongoose; // Exporte o objeto mongoose
+module.exports = mongoose; 
 
 

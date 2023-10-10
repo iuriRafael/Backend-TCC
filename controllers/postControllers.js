@@ -33,7 +33,7 @@ exports.uploadImage = async (req, res) => {
       imageInfos.push(imageInfo);
     }
 
-    // Salvar as informações das imagens no banco de dados
+  
     const savedImages = await Post.insertMany(imageInfos);
 
     console.log('Imagens salvas com sucesso no banco de dados:', savedImages);
@@ -99,3 +99,20 @@ exports.listConcludedPosts = async (req, res) => {
     res.status(500).json({ error: 'Erro ao listar as postagens.' });
   }
 };
+
+//excluir publicação
+exports.deletePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    await Post.findByIdAndDelete(postId);
+
+    return res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+

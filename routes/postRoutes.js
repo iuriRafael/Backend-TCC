@@ -4,9 +4,7 @@ const imageController = require('../controllers/postControllers');
 const Post = require('../model/post');
 
 
-  // Rota para upload de imagem com descrição e localização
   router.post('/upload', imageController.uploadImage);
-  // Rota para listar as imagens
   router.get('/list', imageController.listPosts);
 
   router.get('/user/:userId', async (req, res) => {
@@ -25,9 +23,9 @@ const Post = require('../model/post');
 
   router.put('/:id/conclude', imageController.concludePost);
 
-  //fazer a rota para listar as publicações concluídas
   router.get('/listConcluded', imageController.listConcludedPosts);
 
+  //excluir rotas
+  router.delete('/:id', imageController.deletePost);
 
-  
 module.exports = router;

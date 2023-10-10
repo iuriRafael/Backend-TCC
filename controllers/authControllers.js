@@ -25,7 +25,7 @@ exports.cadastro = async (req, res) => {
 
       const token = jwt.sign({ userId: newUser._id }, 'iurikannemann');
 
-      res.status(201).json({ message: 'Cadastro bem-sucedido', nome: newUser.nome, token, usuario_id });
+      res.status(201).json({ message: 'Cadastro bem-sucedido', nome: newUser.nome, token, usuario_id , email});
     } catch (error) {
       console.error('Erro ao cadastrar usuário:', error);
       res.status(500).json({ error: 'Erro ao cadastrar o usuário' });
@@ -56,10 +56,14 @@ exports.cadastro = async (req, res) => {
 
         const token = jwt.sign({ userId: user._id }, 'iurikannemann');
 
-        res.status(200).json({ message: 'Login bem-sucedido', nome: user.nome, token, usuario_id });
+        
+
+        res.status(200).json({ message: 'Login bem-sucedido', nome: user.nome, token, usuario_id, email});
     } catch (error) {
         console.error('Erro ao realizar login:', error);
         res.status(500).json({ error: 'Erro ao realizar login' });
     }
 };
+
+
 
