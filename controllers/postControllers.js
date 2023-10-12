@@ -4,7 +4,6 @@ const path = require('path');
 const ConcludedPost = require('../model/concludedPost');
 
 
-
 // Função para fazer upload de imagem com descrição e localização
 exports.uploadImage = async (req, res) => {
   try {
@@ -45,7 +44,7 @@ exports.uploadImage = async (req, res) => {
 };
 
 
-
+//Listar publicação não concluida
 exports.listPosts = async (req, res) => {
   try {
     const posts = await Post.find().exec();
@@ -112,6 +111,23 @@ exports.deletePost = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
+// listar as publicações concluídas de um usuário específico
+exports.listConcludedPostsByUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    console.log('User ID:', userId);
+    const posts = await ConcludedPost.find({ userId }).exec();
+    console.log('Concluded Posts:', posts);
+
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao listar as postagens.' });
+  }
+};
+
 
 
 
