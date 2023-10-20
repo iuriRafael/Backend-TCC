@@ -18,6 +18,8 @@ exports.uploadImage = async (req, res) => {
       const imagePath = './uploads/' + Date.now() + '.png'; // Caminho para salvar a imagem
       const { description, location } = req.body;
 
+      const locationCoordinates = location.coordinates;
+
       // Salvar a imagem no servidor
       fs.writeFileSync(path.resolve(imagePath), imageBuffer);
 
@@ -25,7 +27,10 @@ exports.uploadImage = async (req, res) => {
       const imageInfo = {
         image: imagePath,
         description: description,
-        location: location,
+        location: {
+          type: 'Point',
+          coordinates: locationCoordinates,
+        },
         userId: userId,
       };
 
