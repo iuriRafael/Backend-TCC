@@ -22,7 +22,7 @@ const Post = require('../model/post');
       console.error('Erro ao buscar as publicações do usuário:', error);
       res.status(500).json({ error: 'Erro ao buscar as publicações do usuário' });
     }
-  });
+  });//iuri
 
 
   //usuário concluir publicação
