@@ -11,5 +11,15 @@
             "src":"(.*)",
             "dest":"/index.js"
         }
-    ]
+    ],
+
+    "rewrites": [
+        {
+          "source": "/uploads/(.*)",
+          "destination": "https://backend-tcc-rho.vercel.app/posts/upload"
+        }
+      ]
+
+    
+    
 }

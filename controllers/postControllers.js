@@ -15,7 +15,8 @@ exports.uploadImage = async (req, res) => {
     for (const file of req.body.files) {
       const base64Data = file.replace(/^data:image\/\w+;base64,/, '');
       const imageBuffer = Buffer.from(base64Data, 'base64');
-      const imagePath = path.join(__dirname, 'uploads', `${Date.now()}.png`);
+      
+      const imagePath = './uploads/' + Date.now() + '.png'; 
 
       const { description, location } = req.body;
 
