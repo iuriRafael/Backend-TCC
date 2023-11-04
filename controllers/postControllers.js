@@ -3,6 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const ConcludedPost = require('../model/concludedPost');
 
+const cloudinary = require('../config/cloudinary');
+
+
 
 // Função para fazer upload de imagem com descrição e localização
 exports.uploadImage = async (req, res) => {
@@ -14,20 +17,20 @@ exports.uploadImage = async (req, res) => {
 
     for (const file of req.body.files) {
       const base64Data = file.replace(/^data:image\/\w+;base64,/, '');
-      const imageBuffer = Buffer.from(base64Data, 'base64');
       
-      const imagePath = './uploads/' + Date.now() + '.png'; 
+      const result = await cloudinary.uploader.upload(`data:image/png;base64,${base64Data}`, {
+        upload_preset: 'iurikannemann' // Substitua 'seu_upload_preset' pelo seu próprio valor
+      });
+
+      // Obtém a URL da imagem do Cloudinary
+      const imageUrl = result.secure_url;
 
       const { description, location } = req.body;
-
       const locationCoordinates = location.coordinates;
-
-      // Salvar a imagem no servidor
-      fs.writeFileSync(path.resolve(imagePath), imageBuffer);
 
       // Criar um objeto de informações da imagem
       const imageInfo = {
-        image: imagePath,
+        image: imageUrl,
         description: description,
         location: {
           type: 'Point',
