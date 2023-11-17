@@ -1,9 +1,12 @@
+require('dotenv').config();
+
 const Post = require('../model/post');
 const fs = require('fs');
 const path = require('path');
 const ConcludedPost = require('../model/concludedPost');
 
 const cloudinary = require('../config/cloudinary');
+const nodemailer = require('nodemailer');
 
 
 
@@ -12,8 +15,10 @@ exports.uploadImage = async (req, res) => {
   try {
     const imageInfos = [];
     const userId = req.body.userId;
+    const userEmail = req.body.email;
 
     console.log('ID do usuário:', userId);
+    console.log('Email do usuário:', userEmail);
 
     for (const file of req.body.files) {
       const base64Data = file.replace(/^data:image\/\w+;base64,/, '');
@@ -37,6 +42,7 @@ exports.uploadImage = async (req, res) => {
           coordinates: locationCoordinates,
         },
         userId: userId,
+        email: userEmail,
       };
 
       imageInfos.push(imageInfo);
@@ -70,6 +76,7 @@ exports.listPosts = async (req, res) => {
 exports.concludePost = async (req, res) => {
   try {
     const postId = req.params.id;
+    const Email = req.body.email;
     const post = await Post.findById(postId);
 
     if (!post) {
@@ -81,6 +88,7 @@ exports.concludePost = async (req, res) => {
 
     const concludedPost = new ConcludedPost({
       userId: post.userId,
+      email: post.email,
       description: post.description,
       location: post.location,
       image: post.image,
@@ -139,6 +147,37 @@ exports.listConcludedPostsByUser = async (req, res) => {
 };
 
 
+exports.sendEmail = async (req, res) => {
+  const { userId, userEmail } = req.body;
+  console.log('User ID:', userEmail);
 
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD
+  }
+    });
 
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: userEmail,
+      subject: 'Avisa CLEAN MAP',
+      text: 'Post concluindo com sucesso!',
+    };
 
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Erro ao enviar o e-mail' });
+      } else {
+        console.log('Email enviado: ' + info.response);
+        res.status(200).json({ message: 'E-mail enviado com sucesso' });
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao enviar o e-mail:', error);
+    res.status(500).json({ message: 'Erro ao enviar o e-mail' });
+  }
+};

@@ -3,6 +3,7 @@ const router = express.Router();
 const imageController = require('../controllers/postControllers');
 const Post = require('../model/post');
 
+
   //Postar a publicação
   router.post('/upload', imageController.uploadImage);
 
@@ -37,4 +38,7 @@ const Post = require('../model/post');
   //Listar publicação concluídas por usuário
   router.get('/concluded-posts/:userId', imageController.listConcludedPostsByUser);
 
+  router.post('/email', imageController.sendEmail);
+
+  
 module.exports = router;
