@@ -76,32 +76,56 @@ exports.listPosts = async (req, res) => {
 exports.concludePost = async (req, res) => {
   try {
     const postId = req.params.id;
-    const Email = req.body.email;
     const post = await Post.findById(postId);
 
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
 
-    post.concluded = true;
-    await post.save();
+    const userEmail = post.email; // Pegando o email associado à postagem concluída
 
-    const concludedPost = new ConcludedPost({
-      userId: post.userId,
-      email: post.email,
-      description: post.description,
-      location: post.location,
-      image: post.image,
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
+      }
     });
 
-    await concludedPost.save();
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: userEmail, // Usando o email associado à postagem concluída
+      subject: 'Avisa CLEAN MAP',
+      text: 'Post concluído com sucesso!'
+    };
 
-    await Post.findByIdAndDelete(postId);
+    transporter.sendMail(mailOptions, async function (error, info) {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Erro ao enviar o e-mail' });
+      } else {
+        console.log('Email enviado: ' + info.response);
 
-    return res.status(200).json({ message: 'Post concluded successfully' });
+        // Salvar a postagem concluída
+        const concludedPost = new ConcludedPost({
+          userId: post.userId,
+          email: userEmail, 
+          description: post.description,
+          location: post.location,
+          image: post.image
+        });
+
+        await concludedPost.save();
+
+        // Excluir o post original
+        await Post.findByIdAndDelete(postId);
+
+        return res.status(200).json({ message: 'Post concluído e e-mail enviado com sucesso' });
+      }
+    });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
+    console.error('Erro ao concluir o post:', error);
+    return res.status(500).json({ message: 'Erro ao concluir o post' });
   }
 };
 
@@ -147,37 +171,40 @@ exports.listConcludedPostsByUser = async (req, res) => {
 };
 
 
-exports.sendEmail = async (req, res) => {
-  const { userId, userEmail } = req.body;
-  console.log('User ID:', userEmail);
+// exports.sendEmail = async (req, res) => {
+  
+//   try {
+//     const post = req.body; // Supondo que você está recebendo os dados do post
+//     const userEmail = post.email; 
+//     console.log('Email do usuário:', userEmail);
 
-  try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASSWORD
-  }
-    });
 
-    const mailOptions = {
-      from: process.env.EMAIL,
-      to: userEmail,
-      subject: 'Avisa CLEAN MAP',
-      text: 'Post concluindo com sucesso!',
-    };
+//     const transporter = nodemailer.createTransport({
+//       service: 'gmail',
+//   auth: {
+//     user: process.env.EMAIL,
+//     pass: process.env.PASSWORD
+//   }
+//     });
 
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-        res.status(500).json({ message: 'Erro ao enviar o e-mail' });
-      } else {
-        console.log('Email enviado: ' + info.response);
-        res.status(200).json({ message: 'E-mail enviado com sucesso' });
-      }
-    });
-  } catch (error) {
-    console.error('Erro ao enviar o e-mail:', error);
-    res.status(500).json({ message: 'Erro ao enviar o e-mail' });
-  }
-};
+//     const mailOptions = {
+//       from: process.env.EMAIL,
+//       to: userEmail,
+//       subject: 'Avisa CLEAN MAP',
+//       text: 'Post concluindo com sucesso!',
+//     };
+
+//     transporter.sendMail(mailOptions, function (error, info) {
+//       if (error) {
+//         console.log(error);
+//         res.status(500).json({ message: 'Erro ao enviar o e-mail' });
+//       } else {
+//         console.log('Email enviado: ' + info.response);
+//         res.status(200).json({ message: 'E-mail enviado com sucesso' });
+//       }
+//     });
+//   } catch (error) {
+//     console.error('Erro ao enviar o e-mail:', error);
+//     res.status(500).json({ message: 'Erro ao enviar o e-mail' });
+//   }
+// };

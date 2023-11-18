@@ -38,7 +38,7 @@ const Post = require('../model/post');
   //Listar publicação concluídas por usuário
   router.get('/concluded-posts/:userId', imageController.listConcludedPostsByUser);
 
-  router.post('/email', imageController.sendEmail);
+  // router.post('/email', imageController.sendEmail);
 
   
 module.exports = router;
