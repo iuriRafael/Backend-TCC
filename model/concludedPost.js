@@ -6,7 +6,7 @@ const concludedPostSchema = new mongoose.Schema({
     ref: 'User', 
     required: true
   },
-  email: { // Adicione o campo de email aqui
+  email: { 
     type: String,
     required: true
   },

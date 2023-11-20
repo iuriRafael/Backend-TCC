@@ -7,8 +7,6 @@ const requireAuth = (req, res, next) => {
     if (!token) {
       return res.status(401).json({ error: 'Token de autenticação ausente' });
     }
-  
-  
     jwt.verify(token, 'iurikannemann', async (err, decodedToken) => {
       if (err) {
         console.error('Erro ao verificar token JWT:', err);
@@ -23,10 +21,8 @@ const requireAuth = (req, res, next) => {
           return res.status(401).json({ error: 'Usuário não encontrado' });
         }
   
-        // Se o usuário existir, adicione o objeto de usuário à solicitação para uso posterior
         req.user = user;
   
-        // Continue para a próxima rota ou middleware
         next();
       } catch (error) {
         console.error('Erro ao buscar usuário:', error);
