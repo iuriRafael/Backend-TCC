@@ -19,7 +19,10 @@ const concludedPostSchema = new mongoose.Schema({
     coordinates: [Number], 
   },
   image: String,
-  
+  createdAt: {
+    type: Date,
+    default: Date.now // Define a data atual como padrão
+  }
 });
 
 const ConcludedPost = mongoose.model('ConcludedPost', concludedPostSchema);

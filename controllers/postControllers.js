@@ -33,6 +33,8 @@ exports.uploadImage = async (req, res) => {
       const { description, location } = req.body;
       const locationCoordinates = location.coordinates;
 
+      const createdAt = new Date(); 
+
       // Criar um objeto de informações da imagem
       const imageInfo = {
         image: imageUrl,
@@ -43,6 +45,7 @@ exports.uploadImage = async (req, res) => {
         },
         userId: userId,
         email: userEmail,
+        createdAt: createdAt
       };
 
       imageInfos.push(imageInfo);
@@ -106,13 +109,16 @@ exports.concludePost = async (req, res) => {
       } else {
         console.log('Email enviado: ' + info.response);
 
+        const concludedAt = new Date();
+
         // Salvar a postagem concluída
         const concludedPost = new ConcludedPost({
           userId: post.userId,
           email: userEmail, 
           description: post.description,
           location: post.location,
-          image: post.image
+          image: post.image,
+          concludedAt: concludedAt
         });
 
         await concludedPost.save();

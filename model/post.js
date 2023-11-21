@@ -19,6 +19,10 @@ const postSchema = new mongoose.Schema({
     coordinates: [Number], 
   },
   image: String,
+  createdAt: {
+    type: Date,
+    default: Date.now // Define a data atual como padrão
+  }
 });
 
 postSchema.index({ location: '2dsphere' });
