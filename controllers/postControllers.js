@@ -7,6 +7,7 @@ const ConcludedPost = require("../model/concludedPost");
 
 const cloudinary = require("../config/cloudinary");
 const nodemailer = require("nodemailer");
+
 exports.uploadImage = async (req, res) => {
   try {
     const imageInfos = [];
@@ -60,6 +61,7 @@ exports.uploadImage = async (req, res) => {
     res.status(500).json({ message: "Erro ao salvar imagens" });
   }
 };
+
 exports.listPosts = async (req, res) => {
   try {
     const posts = await Post.find().exec();
