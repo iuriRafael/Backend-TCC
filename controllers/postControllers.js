@@ -53,6 +53,7 @@ exports.uploadImage = async (req, res) => {
     }
 
     const savedImages = await Post.insertMany(imageInfos);
+    
 
     console.log("Imagens salvas com sucesso no banco de dados:", savedImages);
     res.json({ message: "Imagens salvas com sucesso no banco de dados" });
